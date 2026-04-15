@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Hyperliquid Bridge — How to Deposit &amp; Withdraw: Complete Guide (2026)</title>
+  <meta name="description" content="Complete Hyperliquid Bridge guide (2026): how to deposit USDC to Hyperliquid L1, how withdrawals work, bridge fees and timing, supported assets, how Hyperliquid's native L1 bridge differs from third-party bridges, security model, troubleshooting stuck deposits and withdrawals, and a deep FAQ.">
+  <meta name="keywords" content="Hyperliquid Bridge, Hyperliquid deposit, Hyperliquid withdrawal, Hyperliquid USDC bridge, how to bridge to Hyperliquid, Hyperliquid L1 bridge">
+  <meta name="author" content="Crypto Finance Experts">
+  <link rel="canonical" href="https://hyperliquid-bridge-guide.example.com/">
+  <link rel="icon" type="image/png" href="hyper.logo.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hyperliquid-bridge-guide.example.com/">
+  <meta property="og:title" content="Hyperliquid Bridge — Deposit &amp; Withdraw Guide (2026)">
+  <meta property="og:description" content="How to deposit and withdraw on Hyperliquid Bridge, fees, timing, supported assets, and security model.">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Hyperliquid Bridge Guide (2026)">
+  <meta name="twitter:description" content="Complete guide to the Hyperliquid Bridge: deposits, withdrawals, fees, timing, and troubleshooting.">
+
+  <style>
+    :root {
+      --p:    #818CF8;
+      --p2:   #6366F1;
+      --p3:   #4F46E5;
+      --pa:   #A5B4FC;
+      --pb:   #C7D2FE;
+
+      /* teal accent — Hyperliquid secondary */
+      --t:    #2DD4BF;
+      --ta:   #5EEAD4;
+      --tb:   #99F6E4;
+
+      --ink:   #F5F3FF;
+      --sub:   #C7D2FE;
+      --muted: #94A3B8;
+      --dim:   #64748B;
+
+      --bg:    #06050F;
+      --card:  rgba(255,255,255,.028);
+      --line:  rgba(255,255,255,.07);
+      --lp:    rgba(129,140,248,.14);
+      --lt:    rgba(45,212,191,.10);
+
+      --ok:   #34D399;
+      --warn: #FBBF24;
+      --err:  #F87171;
+
+      --r:  12px;
+      --rl: 18px;
+      --gap: 1.2rem;
+      --sh: 0 8px 32px rgba(0,0,0,.68);
+      --shp: 0 4px 28px rgba(129,140,248,.15);
+      --sht: 0 4px 20px rgba(45,212,191,.10);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+    html { scroll-behavior: smooth }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      background-image:
+        radial-gradient(ellipse 960px 540px at 0%   0%,  rgba(99,102,241,.11), transparent 55%),
+        radial-gradient(ellipse 700px 420px at 100% 8%,  rgba(45,212,191,.05), transparent 50%),
+        radial-gradient(ellipse 600px 380px at 50%  97%, rgba(79,70,229,.08),  transparent 55%);
+      color: var(--muted);
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    a { color: var(--pa); text-decoration: none }
+    a:hover { text-decoration: underline }
+    img { max-width: 100%; height: auto; display: block }
+    strong { color: #E0E7FF; font-weight: 600 }
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 1.4rem }
+
+    h1,h2,h3,h4 { color: var(--ink); line-height: 1.25 }
+    h1 { font-size: clamp(2.1rem,5vw,3.2rem); font-weight: 800; letter-spacing: -.5px }
+    h2 { font-size: clamp(1.25rem,2.5vw,1.75rem); font-weight: 700; margin-top: 1.8rem; padding-top: .7rem; border-top: 1px solid var(--line) }
+    h3 { font-size: 1.08rem; font-weight: 700; color: var(--sub) }
+    p,li,td,th { font-size: 1rem; line-height: 1.75 }
+    .lead { font-size: 1.08rem; color: #B0BBFF }
+
+    /* ── HERO ── */
+    header.hero {
+      padding: clamp(2.5rem,6vw,5.5rem) 0 clamp(2rem,4vw,3.5rem);
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-card {
+      background: rgba(99,102,241,.05);
+      border: 1px solid var(--lp);
+      border-radius: var(--rl);
+      padding: clamp(1.5rem,3.5vw,2.6rem);
+      box-shadow: var(--sh), var(--shp);
+      position: relative; overflow: hidden;
+    }
+    .hero-card::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg,
+        transparent 4%,
+        rgba(165,180,252,.50) 24%,
+        rgba(129,140,248,.88) 42%,
+        rgba(45,212,191,.65) 58%,
+        rgba(94,234,212,.50) 76%,
+        transparent 96%
+      );
+    }
+
+    .brand-row { display: flex; align-items: center; gap: .95rem; margin-bottom: 1rem }
+    .brand-logo {
+      width: 56px; height: 56px; border-radius: 14px;
+      border: 1px solid rgba(129,140,248,.30);
+      background: rgba(99,102,241,.12);
+      padding: .3rem; object-fit: contain;
+      box-shadow: 0 4px 18px rgba(129,140,248,.22);
+      flex: 0 0 auto;
+    }
+    .brand-label { color: var(--dim); font-size: .85rem; font-weight: 600; text-transform: uppercase; letter-spacing: .4px }
+    .brand-sub   { color: var(--muted); font-size: .85rem }
+
+    /* ── CTA ── */
+    .cta-center { display: flex; justify-content: center; margin-top: 2.2rem }
+    .cta {
+      display: inline-flex; align-items: center; gap: .7rem;
+      background: linear-gradient(135deg, #A5B4FC 0%, #818CF8 38%, #6366F1 72%, #4F46E5 100%);
+      color: #fff;
+      padding: 1.2rem 3.2rem;
+      border-radius: 16px;
+      font-weight: 900; font-size: 1.15rem; letter-spacing: .15px;
+      box-shadow:
+        0 0 0 1px rgba(129,140,248,.28),
+        0 0 40px rgba(129,140,248,.40),
+        0 8px 26px rgba(99,102,241,.32),
+        0 22px 52px rgba(79,70,229,.26);
+      border: none; cursor: pointer; text-decoration: none;
+      transition: transform .18s, box-shadow .18s, filter .18s;
+    }
+    .cta:hover {
+      transform: translateY(-3px) scale(1.025); filter: brightness(1.08);
+      color: #fff; text-decoration: none;
+      box-shadow:
+        0 0 0 1px rgba(129,140,248,.46),
+        0 0 60px rgba(129,140,248,.56),
+        0 10px 36px rgba(99,102,241,.44),
+        0 28px 64px rgba(79,70,229,.36);
+    }
+
+    /* ── NOTE ── */
+    .note {
+      border-left: 3px solid var(--pa);
+      padding: .85rem 1rem;
+      background: rgba(99,102,241,.07);
+      border-radius: 0 9px 9px 0;
+      color: var(--sub); margin-top: 1rem;
+    }
+    .note.teal {
+      border-left-color: var(--ta);
+      background: rgba(45,212,191,.07);
+      color: var(--tb);
+    }
+    .note.warn {
+      border-left-color: var(--warn);
+      background: rgba(251,191,36,.07);
+      color: #FEF3C7;
+    }
+
+    /* ── STEPS ── */
+    section.step-guide {
+      padding: clamp(2rem,5vw,3.5rem) 0;
+      border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    }
+    .steps { display: grid; gap: var(--gap); grid-template-columns: 1fr }
+    .step {
+      background: var(--card); border: 1px solid var(--line);
+      border-top: 2px solid rgba(129,140,248,.28); border-radius: var(--r);
+      padding: 1.25rem; box-shadow: var(--sh); transition: transform .18s, box-shadow .18s;
+    }
+    .step:hover { transform: translateY(-3px); box-shadow: var(--sh), var(--shp) }
+    .step .icon {
+      width: 44px; height: 44px; border-radius: 9px;
+      display: inline-grid; place-items: center;
+      background: rgba(99,102,241,.12); margin-bottom: .65rem;
+      font-weight: 800; font-size: .92rem; color: var(--pa);
+      border: 1px solid rgba(129,140,248,.22);
+    }
+
+    /* ── CARD ── */
+    main { padding-top: .5rem }
+    main .card {
+      background: var(--card); border: 1px solid var(--line);
+      border-radius: var(--r); padding: 1.5rem; margin: 1.2rem 0; box-shadow: var(--sh);
+    }
+    main .card > h2:first-child { margin-top: 0; border-top: none; padding-top: 0 }
+
+    /* ── TOC ── */
+    .toc { border: 1px solid var(--lp); background: rgba(99,102,241,.05); border-radius: var(--r); padding: 1.1rem 1.3rem }
+    .toc strong { color: var(--ink) }
+    .toc ul { margin: .5rem 0 0; padding-left: 1.1rem }
+    .toc li { margin: .28rem 0; font-size: .96rem }
+    .toc a { font-weight: 600 }
+
+    /* ── CALLOUT GRID ── */
+    .callout-grid { display: grid; gap: var(--gap); grid-template-columns: 1fr; margin-top: .8rem }
+    .mini { background: rgba(255,255,255,.02); border: 1px solid var(--line); border-radius: var(--r); padding: 1rem }
+    .mini h3 { margin-bottom: .35rem }
+    .kpi-badges { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .55rem }
+    .kpi-badges span {
+      border: 1px solid rgba(129,140,248,.22); background: rgba(99,102,241,.09);
+      color: var(--sub); padding: .26rem .54rem;
+      border-radius: 999px; font-size: .87rem; font-weight: 600;
+    }
+    .kpi-badges span.teal {
+      border-color: rgba(45,212,191,.22); background: rgba(45,212,191,.08);
+      color: var(--ta);
+    }
+
+    /* ── BRIDGE FLOW DIAGRAM — unique element ── */
+    .bridge-flow {
+      margin-top: 1.1rem;
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      overflow: hidden;
+    }
+    .bf-header {
+      padding: .58rem 1.15rem;
+      background: rgba(99,102,241,.07);
+      border-bottom: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .bf-title { font-size: .78rem; font-weight: 700; color: var(--pa); text-transform: uppercase; letter-spacing: .5px }
+    .bf-badge {
+      font-size: .72rem; font-weight: 700; padding: .18rem .55rem;
+      border-radius: 999px; background: rgba(45,212,191,.12); color: var(--ta);
+    }
+
+    /* two-column layout: deposit | withdraw */
+    .bf-cols {
+      display: grid; grid-template-columns: 1fr 1px 1fr;
+    }
+    .bf-col { padding: 1rem 1.15rem }
+    .bf-col-divider {
+      background: var(--line);
+    }
+    .bf-col-title {
+      font-size: .78rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .5px; margin-bottom: .75rem;
+      display: flex; align-items: center; gap: .4rem;
+    }
+    .bf-col-title.dep { color: var(--ok) }
+    .bf-col-title.with { color: var(--pa) }
+
+    .bf-step-list { display: flex; flex-direction: column; gap: .45rem }
+    .bf-step-item {
+      display: flex; align-items: flex-start; gap: .5rem;
+    }
+    .bf-step-circle {
+      width: 22px; height: 22px; border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: .7rem; font-weight: 800;
+      flex: 0 0 auto; margin-top: .14rem;
+    }
+    .dep .bf-step-circle  { background: rgba(52,211,153,.14); color: #34D399; border: 1px solid rgba(52,211,153,.26) }
+    .with .bf-step-circle { background: rgba(129,140,248,.14); color: var(--pa); border: 1px solid rgba(129,140,248,.26) }
+    .bf-step-text { font-size: .85rem; color: var(--muted) }
+    .bf-step-text strong { color: var(--ink) }
+
+    /* chain nodes */
+    .bf-chain-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: .65rem; padding: .85rem 1.15rem;
+      background: rgba(255,255,255,.016);
+      border-top: 1px solid rgba(255,255,255,.05);
+    }
+    .bf-chain {
+      display: flex; flex-direction: column; align-items: center; gap: .2rem;
+    }
+    .bf-chain-pill {
+      padding: .38rem .9rem; border-radius: 8px;
+      font-size: .85rem; font-weight: 800;
+    }
+    .bf-chain-pill.arb  { background: rgba(45,212,191,.12); border: 1px solid rgba(45,212,191,.24); color: var(--ta) }
+    .bf-chain-pill.hl   { background: rgba(129,140,248,.14); border: 1px solid rgba(129,140,248,.28); color: var(--pa) }
+    .bf-chain-pill.eth  { background: rgba(165,180,252,.10); border: 1px solid rgba(165,180,252,.22); color: var(--pb) }
+    .bf-chain-label { font-size: .7rem; color: var(--dim) }
+    .bf-arrow-h { font-size: 1.2rem; color: var(--dim); font-weight: 700 }
+
+    .bf-footer {
+      padding: .6rem 1.15rem;
+      border-top: 1px solid rgba(255,255,255,.05);
+      background: rgba(255,255,255,.01);
+      font-size: .80rem; color: var(--dim);
+      display: flex; flex-wrap: wrap; gap: .9rem;
+    }
+    .bf-footer strong { color: var(--pa) }
+
+    /* ── TIMING TABLE ── */
+    .timing-grid {
+      display: grid; grid-template-columns: 1fr; gap: .6rem; margin-top: 1rem;
+    }
+    .timing-row {
+      display: flex; align-items: center; gap: .85rem;
+      background: rgba(255,255,255,.02); border: 1px solid var(--line);
+      border-radius: var(--r); padding: .8rem 1rem;
+    }
+    .timing-icon {
+      font-size: 1.3rem; flex: 0 0 auto;
+    }
+    .timing-body { flex: 1 }
+    .timing-label { font-weight: 700; color: var(--ink); font-size: .92rem }
+    .timing-desc  { font-size: .85rem; color: var(--muted) }
+    .timing-val {
+      font-weight: 900; font-size: 1rem; white-space: nowrap;
+    }
+    .timing-val.fast { color: var(--ok) }
+    .timing-val.mid  { color: var(--warn) }
+    .timing-val.slow { color: var(--pa) }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; border-radius: var(--r); border: 1px solid var(--line) }
+    table { width: 100%; border-collapse: collapse; min-width: 480px }
+    th,td { padding: .8rem .95rem; border-bottom: 1px solid var(--line); text-align: left }
+    th { background: rgba(99,102,241,.07); color: var(--ink); font-weight: 700; font-size: .92rem }
+    tr.hi { background: rgba(99,102,241,.04) }
+    tr:hover td { background: rgba(255,255,255,.016) }
+    tr:last-child td { border-bottom: none }
+    .ok  { color: var(--ok)  }
+    .warn{ color: var(--warn) }
+    .err { color: var(--err)  }
+
+    /* ── EEAT ── */
+    .eeat { background: var(--card); border: 1px solid var(--lp); border-radius: var(--r); padding: 1.5rem; box-shadow: var(--sh) }
+    .eeat > h2:first-child { margin-top: 0; border-top: none; padding-top: 0 }
+
+    /* ── FAQ ── */
+    .faq-item { border-bottom: 1px solid var(--line); padding: .9rem 0 }
+    .faq-item:last-child { border-bottom: none }
+    .faq-button { all: unset; display: flex; justify-content: space-between; align-items: flex-start; width: 100%; cursor: pointer; gap: 1rem }
+    .faq-button:focus-visible { outline: 2px solid var(--p); border-radius: 4px }
+    .faq-button h3 { margin: 0; font-weight: 700; font-size: 1rem; line-height: 1.4 }
+    .faq-content { max-height: 0; overflow: hidden; transition: max-height .26s ease }
+    .faq-content.open { padding-top: .65rem }
+    .faq-plus { font-weight: 800; font-size: 1.35rem; color: var(--pa); flex: 0 0 auto; line-height: 1; transition: transform .2s }
+    .faq-button[aria-expanded="true"] .faq-plus { transform: rotate(45deg) }
+
+    @media(min-width:860px){
+      .steps { grid-template-columns: repeat(4,1fr) }
+      .callout-grid { grid-template-columns: 1fr 1fr }
+      .timing-grid { grid-template-columns: 1fr 1fr }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero" role="banner">
+  <div class="container">
+    <div class="hero-card">
+      <div class="brand-row">
+        <img class="brand-logo" src="hyper.logo.png" alt="Hyperliquid logo">
+        <div>
+          <div class="brand-label">Hyperliquid Native Bridge</div>
+          <div class="brand-sub">Deposit USDC · Withdraw Funds · Arbitrum ↔ Hyperliquid L1 · Fast Settlement</div>
+        </div>
+      </div>
+
+      <h1>Hyperliquid Bridge</h1>
+      <p class="lead" style="margin-top:.75rem">
+        The complete guide to the <strong>Hyperliquid Bridge</strong> —
+        the native gateway between <strong>Arbitrum</strong> (and Ethereum)
+        and <strong>Hyperliquid L1</strong>, the custom high-performance
+        blockchain that powers Hyperliquid's perpetual DEX.
+        Understand exactly how to <strong>deposit USDC to Hyperliquid</strong>,
+        how <strong>withdrawals</strong> back to Arbitrum work and how long they take,
+        what fees apply, why the Hyperliquid Bridge uses Arbitrum as its settlement layer,
+        how the <strong>native bridge differs from third-party alternatives</strong>,
+        what to do if your <strong>deposit or withdrawal gets stuck</strong>,
+        and the full security model protecting funds in transit
+        between Arbitrum and Hyperliquid L1.
+      </p>
+
+      <div class="cta-center">
+        <a href="#" class="cta" aria-label="Open Hyperliquid Bridge">
+          <span>⇌</span> Open Hyperliquid Bridge
+        </a>
+      </div>
+
+      <div class="note teal">
+        <strong>Hyperliquid Bridge is the only official way to move funds to Hyperliquid L1:</strong>
+        Hyperliquid's L1 is a custom, non-EVM blockchain — standard EVM bridges
+        and aggregators cannot route funds there. The official bridge at
+        app.hyperliquid.xyz is the only supported deposit and withdrawal mechanism.
+        Third-party "Hyperliquid bridges" that appear in search results may be phishing sites.
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- STEPS -->
+<section class="step-guide" aria-labelledby="how-works">
+  <div class="container">
+    <h2 id="how-works" style="margin-top:0;border-top:none;padding-top:0">
+      Hyperliquid Bridge Flow: Connect → Send USDC → Confirm → Trade on Hyperliquid L1
+    </h2>
+    <div class="steps" role="list">
+      <article class="step" role="listitem">
+        <div class="icon">01</div>
+        <h3>Connect wallet on Arbitrum</h3>
+        <p>Navigate to app.hyperliquid.xyz and connect your EVM wallet (MetaMask, WalletConnect). Ensure your wallet is on <strong>Arbitrum One</strong> — the primary settlement chain for Hyperliquid Bridge. USDC on Arbitrum is the primary supported deposit asset.</p>
+      </article>
+      <article class="step" role="listitem">
+        <div class="icon">02</div>
+        <h3>Approve and deposit USDC</h3>
+        <p>Enter the amount of USDC to deposit and approve the bridge contract. Your USDC is locked in the Hyperliquid bridge contract on Arbitrum. The bridge verifies the deposit and credits your Hyperliquid L1 account — typically within 1–3 minutes of Arbitrum confirmation.</p>
+      </article>
+      <article class="step" role="listitem">
+        <div class="icon">03</div>
+        <h3>Funds appear on Hyperliquid L1</h3>
+        <p>Once the bridge processes your deposit, USDC appears as your available balance on Hyperliquid L1. You can immediately open perpetual positions, place limit orders, or provide liquidity — no additional steps required. The entire UX is seamless within the Hyperliquid interface.</p>
+      </article>
+      <article class="step" role="listitem">
+        <div class="icon">04</div>
+        <h3>Withdraw back to Arbitrum</h3>
+        <p>To return USDC to Arbitrum, initiate a withdrawal in the Hyperliquid interface. The bridge processes your withdrawal request and releases USDC from the bridge contract on Arbitrum to your wallet. Standard withdrawals complete in minutes; large withdrawals may take longer for security validation.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="container" role="main">
+
+  <!-- TOC -->
+  <section class="card toc" aria-label="Table of Contents">
+    <strong>On this page — Hyperliquid Bridge:</strong>
+    <ul>
+      <li><a href="#overview">What is the Hyperliquid Bridge and why Arbitrum is the settlement layer</a></li>
+      <li><a href="#flow">Deposit and withdrawal flow: visual diagram and step-by-step</a></li>
+      <li><a href="#timing">Bridge timing: how fast are deposits and withdrawals?</a></li>
+      <li><a href="#fees">Fees: what does bridging to and from Hyperliquid cost?</a></li>
+      <li><a href="#assets">Supported assets on the Hyperliquid Bridge</a></li>
+      <li><a href="#how-to-deposit">How to deposit to Hyperliquid: complete step-by-step guide</a></li>
+      <li><a href="#how-to-withdraw">How to withdraw from Hyperliquid: complete step-by-step guide</a></li>
+      <li><a href="#security">Hyperliquid Bridge security model</a></li>
+      <li><a href="#vs-third-party">Native bridge vs third-party alternatives</a></li>
+      <li><a href="#best-practices">Best practices for Hyperliquid Bridge users</a></li>
+      <li><a href="#troubleshooting">Troubleshooting: stuck deposits, delayed withdrawals, missing funds</a></li>
+      <li><a href="#eeat">Authoritative sources &amp; references</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+  </section>
+
+  <!-- OVERVIEW -->
+  <section class="card" id="overview">
+    <h2>What Is the Hyperliquid Bridge and Why Arbitrum Is the Settlement Layer</h2>
+    <p>
+      The <strong>Hyperliquid Bridge</strong> is the official infrastructure
+      connecting <strong>Hyperliquid L1</strong> — the custom high-performance
+      blockchain purpose-built for Hyperliquid's perpetual DEX —
+      with <strong>Arbitrum One</strong> as the primary external settlement chain.
+    </p>
+    <p>
+      Hyperliquid L1 is not an EVM chain and is not accessible through standard
+      cross-chain bridges. It was designed from scratch for low-latency,
+      high-throughput perpetual trading — achieving sub-millisecond order matching
+      that would be impossible on Ethereum or most EVM networks.
+      The trade-off is that it requires its own dedicated bridge
+      rather than plugging into existing bridge infrastructure.
+    </p>
+
+    <div class="callout-grid">
+      <div class="mini">
+        <h3>Why Arbitrum and not Ethereum?</h3>
+        <p style="color:var(--muted)">Arbitrum was chosen as the primary settlement chain because it provides Ethereum-level security at significantly lower transaction costs. Depositing from Ethereum mainnet directly would cost $10–$50 in gas per deposit; from Arbitrum, gas costs are cents. Most Hyperliquid users already hold USDC on Arbitrum from DeFi activity, making it the natural on-ramp chain.</p>
+        <div class="kpi-badges"><span>Low gas on Arbitrum</span><span>Ethereum security</span><span>DeFi on-ramp</span></div>
+      </div>
+      <div class="mini">
+        <h3>What Hyperliquid L1 provides</h3>
+        <p style="color:var(--muted)">Hyperliquid L1 runs a custom consensus mechanism optimised for order-book trading — delivering 100,000+ TPS order matching with sub-millisecond latency. This performance is what enables Hyperliquid's CEX-quality trading experience. The bridge is the necessary price for this custom performance: funds must enter and exit through the dedicated bridge rather than general-purpose cross-chain routes.</p>
+        <div class="kpi-badges"><span class="teal">100k+ TPS</span><span class="teal">Sub-ms latency</span><span class="teal">Custom L1</span></div>
+      </div>
+      <div class="mini">
+        <h3>Bridge contract on Arbitrum</h3>
+        <p style="color:var(--muted)">When you deposit USDC to Hyperliquid, your USDC is locked in a bridge contract on Arbitrum One — verifiable on Arbiscan. The locked USDC is the collateral backing your Hyperliquid L1 balance. When you withdraw, the bridge contract releases USDC back to your Arbitrum wallet. The contract is audited and the largest single USDC contract on Arbitrum by TVL.</p>
+        <div class="kpi-badges"><span>Arbiscan verified</span><span>USDC locked</span><span>Audited contract</span></div>
+      </div>
+      <div class="mini">
+        <h3>Ethereum mainnet deposits</h3>
+        <p style="color:var(--muted)">While Arbitrum is the primary deposit chain, Hyperliquid also supports direct deposits from Ethereum mainnet — though at higher gas cost. For users with USDC on Ethereum mainnet, bridging first to Arbitrum and then depositing is typically more gas-efficient than depositing directly from mainnet.</p>
+        <div class="kpi-badges"><span>ETH mainnet supported</span><span>Higher gas cost</span><span>Bridge first recommended</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BRIDGE FLOW DIAGRAM -->
+  <section class="card" id="flow">
+    <h2>Deposit and Withdrawal Flow: Visual Diagram and Step-by-Step</h2>
+    <p>
+      The Hyperliquid Bridge has two directions — deposits (Arbitrum → Hyperliquid L1)
+      and withdrawals (Hyperliquid L1 → Arbitrum). Understanding both flows
+      is essential before moving significant funds.
+    </p>
+
+    <!-- Bridge flow diagram — unique design element -->
+    <div class="bridge-flow" role="img" aria-label="Hyperliquid Bridge deposit and withdrawal flow diagram">
+      <div class="bf-header">
+        <span class="bf-title">Hyperliquid Bridge — Bidirectional Flow</span>
+        <span class="bf-badge">USDC · Arbitrum ↔ Hyperliquid L1</span>
+      </div>
+
+      <!-- chain row -->
+      <div class="bf-chain-row">
+        <div class="bf-chain">
+          <div class="bf-chain-pill eth">Ethereum L1</div>
+          <div class="bf-chain-label">Optional origin</div>
+        </div>
+        <span class="bf-arrow-h">→</span>
+        <div class="bf-chain">
+          <div class="bf-chain-pill arb">Arbitrum One</div>
+          <div class="bf-chain-label">Primary settlement</div>
+        </div>
+        <span class="bf-arrow-h" style="color:rgba(129,140,248,.6)">⇌</span>
+        <div class="bf-chain">
+          <div class="bf-chain-pill hl">Hyperliquid L1</div>
+          <div class="bf-chain-label">Trading layer</div>
+        </div>
+      </div>
+
+      <!-- two-column steps -->
+      <div class="bf-cols">
+        <!-- DEPOSIT column -->
+        <div class="bf-col">
+          <div class="bf-col-title dep">↓ Deposit (Arbitrum → HL)</div>
+          <div class="bf-step-list dep">
+            <div class="bf-step-item">
+              <div class="bf-step-circle">1</div>
+              <div class="bf-step-text">Connect EVM wallet on <strong>Arbitrum One</strong> at app.hyperliquid.xyz</div>
+            </div>
+            <div class="bf-step-item">
+              <div class="bf-step-circle">2</div>
+              <div class="bf-step-text">Approve <strong>USDC</strong> for the bridge contract (one-time per wallet)</div>
+            </div>
+            <div class="bf-step-item">
+              <div class="bf-step-circle">3</div>
+              <div class="bf-step-text">Enter deposit amount → confirm transaction → USDC locked in <strong>Arbitrum bridge contract</strong></div>
+            </div>
+            <div class="bf-step-item">
+              <div class="bf-step-circle">4</div>
+              <div class="bf-step-text">Hyperliquid validators detect deposit → credit <strong>HL L1 balance</strong> within ~1–3 min</div>
+            </div>
+            <div class="bf-step-item">
+              <div class="bf-step-circle">5</div>
+              <div class="bf-step-text">Trade immediately — no extra steps needed on Hyperliquid</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- divider -->
+        <div class="bf-col-divider"></div>
+
+        <!-- WITHDRAWAL column -->
+        <div class="bf-col">
+          <div class="bf-col-title with">↑ Withdrawal (HL → Arbitrum)</div>
+          <div class="bf-step-list with">
+            <div class="bf-step-item">
+              <div class="bf-step-circle">1</div>
+              <div class="bf-step-text">In Hyperliquid interface, click <strong>Withdraw</strong> — enter amount and Arbitrum destination address</div>
+            </div>
+            <div class="bf-step-item">
+              <div class="bf-step-circle">2</div>
+              <div class="bf-step-text">Sign withdrawal request — <strong>Hyperliquid L1 balance</strong> is debited immediately</div>
+            </div>
+            <div class="bf-step-item">
+              <div class="bf-step-circle">3</div>
+              <div class="bf-step-text">Hyperliquid validators process and <strong>sign the release transaction</strong> on Arbitrum</div>
+            </div>
+            <div class="bf-step-item">
+              <div class="bf-step-circle">4</div>
+              <div class="bf-step-text">Bridge contract on Arbitrum <strong>releases USDC</strong> to your wallet address</div>
+            </div>
+            <div class="bf-step-item">
+              <div class="bf-step-circle">5</div>
+              <div class="bf-step-text">USDC arrives in your Arbitrum wallet — standard withdrawals <strong>within minutes</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bf-footer">
+        <div>Deposit time: <strong>~1–5 min</strong></div>
+        <div>Withdrawal time: <strong>~2–10 min standard</strong></div>
+        <div>Deposit fee: <strong>Arbitrum gas only (~$0.01–0.10)</strong></div>
+        <div>Withdrawal fee: <strong>~1 USDC flat</strong></div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:1.2rem">
+      <strong>Your Arbitrum wallet address = your Hyperliquid address:</strong>
+      Hyperliquid uses the same address format as EVM chains (0x…) — your Arbitrum wallet
+      address is your Hyperliquid L1 address. When depositing, funds go to the
+      Hyperliquid L1 account associated with your connected Arbitrum wallet address.
+      No separate account creation is needed.
+    </div>
+  </section>
+
+  <!-- TIMING -->
+  <section class="card" id="timing">
+    <h2>Bridge Timing: How Fast Are Deposits and Withdrawals?</h2>
+    <p>
+      Timing varies between deposits and withdrawals — and for withdrawals,
+      between standard amounts and large amounts.
+    </p>
+
+    <div class="timing-grid" role="list">
+      <div class="timing-row" role="listitem">
+        <div class="timing-icon">⬇️</div>
+        <div class="timing-body">
+          <div class="timing-label">Standard deposit (any amount)</div>
+          <div class="timing-desc">Arbitrum confirmation + Hyperliquid validator detection. Most deposits credit within 1–5 minutes of Arbitrum tx confirmation.</div>
+        </div>
+        <div class="timing-val fast">1–5 min</div>
+      </div>
+
+      <div class="timing-row" role="listitem">
+        <div class="timing-icon">⬆️</div>
+        <div class="timing-body">
+          <div class="timing-label">Standard withdrawal (&lt;$100k USDC)</div>
+          <div class="timing-desc">Hyperliquid validators sign + Arbitrum release transaction. Typically completes in a few minutes after request.</div>
+        </div>
+        <div class="timing-val fast">2–10 min</div>
+      </div>
+
+      <div class="timing-row" role="listitem">
+        <div class="timing-icon">🔒</div>
+        <div class="timing-body">
+          <div class="timing-label">Large withdrawal ($100k–$1M USDC)</div>
+          <div class="timing-desc">Additional security validation by Hyperliquid's validator set. Processing time increases to protect against large-scale fund movements.</div>
+        </div>
+        <div class="timing-val mid">10–60 min</div>
+      </div>
+
+      <div class="timing-row" role="listitem">
+        <div class="timing-icon">🏦</div>
+        <div class="timing-body">
+          <div class="timing-label">Very large withdrawal (&gt;$1M USDC)</div>
+          <div class="timing-desc">Multi-signature validator consensus required. Extended validation window for institutional-scale withdrawals for maximum security.</div>
+        </div>
+        <div class="timing-val slow">1–4 hours</div>
+      </div>
+    </div>
+
+    <div class="note teal" style="margin-top:1rem">
+      <strong>Why large withdrawals take longer:</strong>
+      Hyperliquid implements a tiered withdrawal security model —
+      larger withdrawals require more validator signatures and longer
+      validation windows. This design prevents a compromise of a small number
+      of validators from draining large amounts from the bridge contract.
+      The delay is a deliberate security feature, not a bug.
+    </div>
+  </section>
+
+  <!-- FEES -->
+  <section class="card" id="fees">
+    <h2>Fees: What Does Bridging to and from Hyperliquid Cost?</h2>
+
+    <div class="table-wrap">
+      <table aria-label="Hyperliquid Bridge fees">
+        <thead>
+          <tr><th>Fee type</th><th>Amount</th><th>Who pays / receives</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr class="hi">
+            <td>Deposit — Arbitrum gas</td>
+            <td class="ok">~$0.01–$0.10</td>
+            <td>Depositor pays Arbitrum validators</td>
+            <td>Extremely low — Arbitrum L2 gas. Main variable is Ethereum gas price at time of deposit.</td>
+          </tr>
+          <tr>
+            <td>Deposit — bridge fee</td>
+            <td class="ok">None</td>
+            <td>—</td>
+            <td>Hyperliquid charges no protocol fee on deposits. You receive the full USDC amount deposited.</td>
+          </tr>
+          <tr class="hi">
+            <td>Withdrawal — bridge fee</td>
+            <td class="warn">~1 USDC flat</td>
+            <td>Withdrawer — distributed to validators</td>
+            <td>Fixed fee regardless of withdrawal size. 1 USDC on a $100k withdrawal is 0.001% — negligible for large amounts.</td>
+          </tr>
+          <tr>
+            <td>Withdrawal — Arbitrum gas</td>
+            <td class="ok">~$0.01–$0.05</td>
+            <td>Paid by bridge (covered in withdrawal fee)</td>
+            <td>The Arbitrum gas for the release transaction is covered by Hyperliquid — the flat withdrawal fee includes this.</td>
+          </tr>
+          <tr class="hi">
+            <td>Ethereum mainnet deposit (if from L1)</td>
+            <td class="warn">$5–$30</td>
+            <td>Depositor pays Ethereum validators</td>
+            <td>Significantly more expensive than Arbitrum. Bridge to Arbitrum first to minimise deposit gas costs.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note" style="margin-top:1rem">
+      <strong>The withdrawal fee scales with value, not cost:</strong>
+      A flat ~1 USDC withdrawal fee is extraordinarily cheap for large withdrawals
+      but proportionally expensive for tiny withdrawals.
+      If you're withdrawing $10 of USDC, the 1 USDC fee represents 10% —
+      accumulate more balance before withdrawing small amounts.
+      For $10,000+, the 0.01% effective fee is among the lowest in DeFi bridging.
+    </div>
+  </section>
+
+  <!-- ASSETS -->
+  <section class="card" id="assets">
+    <h2>Supported Assets on the Hyperliquid Bridge</h2>
+    <p>
+      The Hyperliquid Bridge primarily supports <strong>USDC</strong> —
+      the stablecoin used as collateral for all Hyperliquid perpetual positions.
+      This design reflects Hyperliquid's architecture: all positions are
+      margined in USDC, eliminating multi-asset collateral complexity.
+    </p>
+
+    <div class="callout-grid">
+      <div class="mini">
+        <h3>USDC — primary bridge asset</h3>
+        <p style="color:var(--muted)">USDC (native Arbitrum USDC, not bridged USDC.e) is the primary and most important asset on the Hyperliquid Bridge. All Hyperliquid perpetual positions use USDC as margin. When you deposit USDC, it immediately becomes available as trading collateral — no conversion required. Always use native USDC on Arbitrum (contract: 0xaf88d…) rather than bridged USDC.e for deposits.</p>
+        <div class="kpi-badges"><span class="teal">Native USDC only</span><span class="teal">Immediate collateral</span><span class="teal">No conversion</span></div>
+      </div>
+      <div class="mini">
+        <h3>Other assets and spot trading</h3>
+        <p style="color:var(--muted)">As Hyperliquid expands its spot trading capabilities, additional assets may become bridgeable. Hyperliquid's HIP-1 and HIP-2 token standards allow native assets to be launched and traded on Hyperliquid L1. For the latest list of bridgeable assets, check the official Hyperliquid bridge interface — the asset list expands as the protocol develops new token standards.</p>
+        <div class="kpi-badges"><span>HIP-1 / HIP-2 tokens</span><span>Spot trading expansion</span><span>Check live list</span></div>
+      </div>
+    </div>
+
+    <div class="note warn">
+      <strong>Use native USDC, not USDC.e:</strong>
+      On Arbitrum, there are two types of USDC — native USDC (issued by Circle directly on Arbitrum)
+      and USDC.e (bridged from Ethereum, older format).
+      Hyperliquid Bridge only accepts <strong>native USDC</strong>.
+      Attempting to deposit USDC.e will fail or result in a failed transaction.
+      In MetaMask and most wallets, native USDC on Arbitrum has the contract address
+      starting with <code>0xaf88d...</code> — verify before depositing.
+    </div>
+  </section>
+
+  <!-- HOW TO DEPOSIT -->
+  <section class="card" id="how-to-deposit">
+    <h2>How to Deposit to Hyperliquid: Complete Step-by-Step Guide</h2>
+    <ol style="padding-left:1.3rem">
+      <li style="margin-bottom:.6rem"><strong>Ensure you have USDC on Arbitrum One</strong> — if your USDC is on Ethereum mainnet or another chain, bridge it to Arbitrum first using Arbitrum's official bridge (bridge.arbitrum.io) or a DEX aggregator. Confirm you have native USDC (not USDC.e) on Arbitrum.</li>
+      <li style="margin-bottom:.6rem"><strong>Have ETH on Arbitrum for gas</strong> — even though Arbitrum gas is cheap (typically $0.01–$0.10 per deposit), you need a small amount of ETH on Arbitrum to pay for the bridge transaction. Most wallets show gas estimates before confirmation.</li>
+      <li style="margin-bottom:.6rem"><strong>Navigate to app.hyperliquid.xyz</strong> — bookmark this URL and verify the domain carefully every session. Hyperliquid phishing sites are common due to the platform's popularity. Never use links from social media or DMs to access Hyperliquid.</li>
+      <li style="margin-bottom:.6rem"><strong>Connect your wallet on Arbitrum</strong> — click "Connect Wallet" and select your wallet (MetaMask, WalletConnect, etc.). Ensure your wallet is on the Arbitrum One network before connecting. The interface will show your Arbitrum USDC balance.</li>
+      <li style="margin-bottom:.6rem"><strong>Go to the Deposit section</strong> — in the Hyperliquid interface, navigate to the deposit panel (typically in the top-right account section or "Deposit" button). Select the amount of USDC to deposit.</li>
+      <li style="margin-bottom:.6rem"><strong>Approve USDC for the bridge contract</strong> — first-time users must approve the Hyperliquid bridge contract to spend your USDC. This is an on-chain approval transaction (~$0.01 gas on Arbitrum). Use exact-amount approval if available.</li>
+      <li style="margin-bottom:.6rem"><strong>Confirm the deposit transaction</strong> — after approval, confirm the actual deposit transaction. Your USDC is transferred to the Hyperliquid bridge contract on Arbitrum. Save the transaction hash from Arbiscan.</li>
+      <li><strong>Wait for credit on Hyperliquid L1</strong> — within 1–5 minutes of your Arbitrum transaction confirming, your USDC balance appears on Hyperliquid. Refresh the page if the balance doesn't appear immediately. Your account is now ready to trade.</li>
+    </ol>
+  </section>
+
+  <!-- HOW TO WITHDRAW -->
+  <section class="card" id="how-to-withdraw">
+    <h2>How to Withdraw from Hyperliquid: Complete Step-by-Step Guide</h2>
+    <ol style="padding-left:1.3rem">
+      <li style="margin-bottom:.6rem"><strong>Close or reduce any open positions</strong> — withdrawals require available balance (not margin tied to open positions). Close positions you don't want to hold before withdrawing, or ensure your available balance (not total equity) exceeds your withdrawal amount.</li>
+      <li style="margin-bottom:.6rem"><strong>Navigate to the Withdraw section</strong> — in the Hyperliquid interface, find the withdrawal panel. This is typically in the same account section as deposits.</li>
+      <li style="margin-bottom:.6rem"><strong>Enter withdrawal amount and destination</strong> — specify how much USDC to withdraw. The destination is your Arbitrum wallet address — typically auto-populated with your connected wallet address. Verify it carefully before proceeding.</li>
+      <li style="margin-bottom:.6rem"><strong>Sign the withdrawal request</strong> — Hyperliquid requires signing a message with your wallet to authorise the withdrawal. This is an off-chain signature (no gas) — it authorises Hyperliquid's validators to process the release on Arbitrum.</li>
+      <li style="margin-bottom:.6rem"><strong>Wait for processing</strong> — Hyperliquid's validators process the withdrawal and submit a release transaction on Arbitrum. Standard withdrawals (&lt;$100k) typically complete in 2–10 minutes. Larger amounts take longer (see the timing table above).</li>
+      <li><strong>Verify USDC arrival on Arbitrum</strong> — check your Arbitrum wallet for the USDC arrival. If the withdrawal was processed but USDC hasn't appeared after 30 minutes for a standard amount, check the withdrawal status in the Hyperliquid interface and verify the Arbitrum transaction on Arbiscan using the transaction hash provided.</li>
+    </ol>
+
+    <div class="note">
+      <strong>Check "Available Balance" not "Account Value":</strong>
+      On Hyperliquid, your "Account Value" includes unrealised P&L
+      from open positions — money that isn't liquid until positions close.
+      Your "Available Balance" is what you can withdraw immediately.
+      Make sure your withdrawal amount doesn't exceed your available balance;
+      attempting to withdraw more than available will fail.
+    </div>
+  </section>
+
+  <!-- SECURITY -->
+  <section class="card" id="security">
+    <h2>Hyperliquid Bridge Security Model</h2>
+    <p>
+      Understanding the security model is essential for any user
+      depositing significant funds to Hyperliquid.
+    </p>
+
+    <div class="table-wrap">
+      <table aria-label="Security model analysis">
+        <thead>
+          <tr><th>Security layer</th><th>How it works</th><th>Protection provided</th></tr>
+        </thead>
+        <tbody>
+          <tr class="hi">
+            <td>Validator multi-signature</td>
+            <td>Withdrawals require threshold signatures from Hyperliquid's validator set — no single validator can release funds</td>
+            <td class="ok">Single validator compromise cannot drain bridge funds</td>
+          </tr>
+          <tr>
+            <td>Tiered withdrawal limits</td>
+            <td>Withdrawal size thresholds require progressively more validator signatures and longer validation windows</td>
+            <td class="ok">Large-scale fund movement requires broader consensus — limits damage from partial validator compromise</td>
+          </tr>
+          <tr class="hi">
+            <td>Arbitrum contract audit</td>
+            <td>The bridge contract on Arbitrum is audited and verifiable on Arbiscan — all deposits and withdrawals are on-chain transparent</td>
+            <td class="ok">Contract logic is public; no hidden backdoors</td>
+          </tr>
+          <tr>
+            <td>Validator set concentration</td>
+            <td>Hyperliquid's validator set is currently relatively small and partly controlled by the Hyperliquid team</td>
+            <td class="warn">More centralised than mature networks — a coordinated validator compromise could theoretically affect the bridge</td>
+          </tr>
+          <tr class="hi">
+            <td>No general-purpose bridge risk</td>
+            <td>The Hyperliquid Bridge is purpose-built for one use case — no shared risk with other bridge users or protocols</td>
+            <td class="ok">Isolated risk profile vs general bridges (Wormhole, Nomad) that have had large exploits</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note warn" style="margin-top:1rem">
+      <strong>Validator centralisation is the key risk to understand:</strong>
+      Hyperliquid's L1 and bridge security depend on its validator set.
+      As of 2026, Hyperliquid's validator set is smaller and more concentrated
+      than mature networks like Ethereum. This is a deliberate trade-off
+      for performance — but means the bridge's security model is less battle-tested
+      than Ethereum's or Arbitrum's own infrastructure.
+      Do not deposit more than you are comfortable holding in this risk profile.
+    </div>
+  </section>
+
+  <!-- VS THIRD PARTY -->
+  <section class="card" id="vs-third-party">
+    <h2>Native Bridge vs Third-Party Alternatives</h2>
+
+    <div class="table-wrap">
+      <table aria-label="Bridge options comparison">
+        <thead>
+          <tr><th>Option</th><th>What it is</th><th>Recommended?</th></tr>
+        </thead>
+        <tbody>
+          <tr class="hi">
+            <td><strong>Hyperliquid native bridge</strong></td>
+            <td>The official bridge at app.hyperliquid.xyz — the only supported way to move funds to/from Hyperliquid L1</td>
+            <td class="ok">Yes — only official method. Use this.</td>
+          </tr>
+          <tr>
+            <td>Third-party "Hyperliquid bridges"</td>
+            <td>Sites claiming to bridge to Hyperliquid — most are either phishing sites or will fail since HL L1 is non-EVM and inaccessible via standard bridges</td>
+            <td class="err">No — avoid entirely. High phishing risk.</td>
+          </tr>
+          <tr class="hi">
+            <td>DEX aggregators (1inch, Paraswap)</td>
+            <td>General-purpose DEX aggregators cannot route to Hyperliquid L1 — they only serve EVM chains</td>
+            <td class="warn">N/A — not applicable for HL L1 bridging</td>
+          </tr>
+          <tr>
+            <td>Buying USDC on HTX/Binance then depositing</td>
+            <td>Withdraw USDC from a CEX to your Arbitrum wallet, then use the official bridge to deposit to Hyperliquid</td>
+            <td class="ok">Valid workflow — CEX → Arbitrum USDC → Hyperliquid Bridge</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note teal">
+      <strong>There is no legitimate third-party Hyperliquid Bridge:</strong>
+      Because Hyperliquid L1 is a custom, non-EVM blockchain,
+      no general-purpose cross-chain bridge (Stargate, Hop, Across, etc.)
+      can route funds there. Any site claiming to offer an alternative
+      Hyperliquid bridge is either a scam or will fail at execution.
+      The only path to Hyperliquid L1 is via the official bridge
+      at app.hyperliquid.xyz.
+    </div>
+  </section>
+
+  <!-- BEST PRACTICES -->
+  <section class="card" id="best-practices">
+    <h2>Best Practices for Hyperliquid Bridge Users</h2>
+    <ul style="padding-left:1.2rem">
+      <li style="margin-bottom:.55rem"><strong>Always verify you're on app.hyperliquid.xyz</strong> — bookmark this URL and type it manually or use the bookmark every session. Hyperliquid phishing sites are among the most sophisticated in DeFi given the platform's large user base and high value of accounts.</li>
+      <li style="margin-bottom:.55rem"><strong>Use native USDC on Arbitrum, not USDC.e</strong> — confirm your USDC token contract address on Arbitrum starts with <code>0xaf88d...</code> before depositing. USDC.e deposits will fail. Most major exchanges now withdraw native USDC to Arbitrum by default.</li>
+      <li style="margin-bottom:.55rem"><strong>Keep a small ETH balance on Arbitrum</strong> — even though deposits are cheap ($0.01–$0.10), you need ETH for gas. Maintain at least 0.005 ETH on Arbitrum to cover multiple deposit transactions without needing to bridge more gas token.</li>
+      <li style="margin-bottom:.55rem"><strong>Don't withdraw while positions are open unless necessary</strong> — closing positions before withdrawing ensures your full balance is liquid and available. Trying to withdraw while position margin is locked will fail or require a position close first.</li>
+      <li style="margin-bottom:.55rem"><strong>For large withdrawals, plan for extended timing</strong> — if you need $500k+ USDC urgently, initiate the withdrawal with adequate time. The security delays on large withdrawals are expected behaviour, not errors. Don't panic if a large withdrawal takes an hour.</li>
+      <li><strong>Save your Arbitrum transaction hash after every deposit</strong> — if a deposit doesn't credit promptly, the transaction hash lets you verify on Arbiscan and provide to Hyperliquid support if needed. Screenshot or copy it immediately after submitting the deposit transaction.</li>
+    </ul>
+  </section>
+
+  <!-- TROUBLESHOOTING -->
+  <section class="card" id="troubleshooting">
+    <h2>Troubleshooting: Stuck Deposits, Delayed Withdrawals, Missing Funds</h2>
+
+    <h3>"My deposit hasn't appeared on Hyperliquid after 10 minutes"</h3>
+    <ul style="padding-left:1.2rem">
+      <li>First, verify the deposit transaction succeeded on Arbiscan — search your wallet address and look for a transaction to the Hyperliquid bridge contract. If the Arbitrum transaction is confirmed (green checkmark), the deposit is in the bridge and being processed by Hyperliquid validators.</li>
+      <li>If Arbitrum shows the transaction as pending, your Arbitrum gas fee may have been too low — the transaction is queued in the mempool. Wait for it to confirm naturally or use MetaMask's "Speed Up" feature with a higher gas price.</li>
+      <li>If Arbitrum confirms but Hyperliquid hasn't credited after 30 minutes, check the Hyperliquid status page and official Discord for any known bridge processing delays. Submit a support ticket with your Arbitrum transaction hash.</li>
+    </ul>
+
+    <h3>"My withdrawal hasn't arrived in my Arbitrum wallet after 30 minutes"</h3>
+    <ul style="padding-left:1.2rem">
+      <li>Check the withdrawal status in your Hyperliquid account's transaction history. If it shows as "processing," the validator set is still signing the release — this is normal for amounts above standard thresholds.</li>
+      <li>Check Arbiscan for any incoming USDC transaction to your wallet address from the Hyperliquid bridge contract. If the Arbitrum release transaction exists but your wallet balance hasn't updated, try refreshing your wallet's Arbitrum network or manually importing the USDC token contract.</li>
+      <li>If the withdrawal shows as completed in Hyperliquid but no Arbitrum transaction exists after 1 hour for a standard amount, contact Hyperliquid support via official Discord with your withdrawal details.</li>
+    </ul>
+
+    <h3>"I sent USDC.e instead of native USDC — what happens?"</h3>
+    <ul style="padding-left:1.2rem">
+      <li>If your deposit transaction failed (reverted), your USDC.e remains in your wallet — nothing was lost. Swap your USDC.e to native USDC on Uniswap or a DEX on Arbitrum, then re-attempt the deposit with native USDC.</li>
+      <li>If the transaction somehow succeeded (unlikely given the contract checks), contact Hyperliquid support immediately with your transaction hash before taking any further action.</li>
+    </ul>
+
+    <div class="note">
+      <strong>Official Hyperliquid Discord is the fastest support channel:</strong>
+      For any Hyperliquid Bridge issue — stuck deposits, delayed withdrawals, or
+      unexpected errors — the official Hyperliquid Discord has a dedicated support channel
+      with active moderators and response times typically under an hour.
+      Always verify you're in the official Discord (linked from app.hyperliquid.xyz)
+      before sharing any transaction details.
+    </div>
+  </section>
+
+  <!-- EEAT -->
+  <section class="eeat" id="eeat" aria-labelledby="eeat-title">
+    <h2 id="eeat-title">Hyperliquid Bridge: Authoritative References &amp; External Sources</h2>
+
+    <h3>Hyperliquid — Official Sources</h3>
+    <ul style="padding-left:1.2rem">
+      <li><a href="https://app.hyperliquid.xyz/" target="_blank" rel="noopener nofollow">Hyperliquid — Official App &amp; Bridge</a></li>
+      <li><a href="https://hyperliquid.gitbook.io/hyperliquid-docs/" target="_blank" rel="noopener nofollow">Hyperliquid — Official Documentation</a></li>
+      <li><a href="https://hyperliquid.gitbook.io/hyperliquid-docs/onboarding/how-to-deposit" target="_blank" rel="noopener nofollow">Hyperliquid — Official Deposit Guide</a></li>
+    </ul>
+
+    <h3>On-Chain Verification</h3>
+    <ul style="padding-left:1.2rem">
+      <li><a href="https://arbiscan.io/" target="_blank" rel="noopener nofollow">Arbiscan — Arbitrum Bridge Contract &amp; Transaction Verification</a></li>
+      <li><a href="https://etherscan.io/" target="_blank" rel="noopener nofollow">Etherscan — Ethereum L1 Transaction Verification</a></li>
+    </ul>
+
+    <h3>Arbitrum USDC</h3>
+    <ul style="padding-left:1.2rem">
+      <li><a href="https://www.circle.com/en/usdc-multichain/arbitrum" target="_blank" rel="noopener nofollow">Circle — Native USDC on Arbitrum (official)</a></li>
+      <li><a href="https://bridge.arbitrum.io/" target="_blank" rel="noopener nofollow">Arbitrum Bridge — Official ETH → Arbitrum Bridge</a></li>
+    </ul>
+
+    <h3>Analytics</h3>
+    <ul style="padding-left:1.2rem">
+      <li><a href="https://defillama.com/protocol/hyperliquid" target="_blank" rel="noopener nofollow">DeFiLlama — Hyperliquid TVL &amp; Volume</a></li>
+      <li><a href="https://dune.com/browse/dashboards" target="_blank" rel="noopener nofollow">Dune Analytics — Hyperliquid Bridge Dashboards</a></li>
+    </ul>
+
+    <div class="note" style="margin-top:1.2rem">
+      <strong>About:</strong> Prepared by Crypto Finance Experts as a practical, SEO-oriented knowledge base for the
+      <em>Hyperliquid Bridge</em>: deposit and withdrawal flows, timing, fees, native USDC requirement,
+      security model, troubleshooting, and comparison with third-party alternatives.
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="card" id="faq" aria-labelledby="faq-title">
+    <h2 id="faq-title" style="margin-top:0;border-top:none;padding-top:0">Hyperliquid Bridge: Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f1" id="b1">
+        <h3>How do I deposit USDC to Hyperliquid?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f1" class="faq-content" role="region" aria-labelledby="b1">
+        <p>To deposit USDC to Hyperliquid: (1) Ensure you have native USDC (not USDC.e) on Arbitrum One. (2) Have a small amount of ETH on Arbitrum for gas (~0.001 ETH is sufficient). (3) Navigate to app.hyperliquid.xyz and connect your wallet on Arbitrum. (4) Click "Deposit," enter your USDC amount, and approve the bridge contract. (5) Confirm the deposit transaction — your USDC is locked in the Hyperliquid bridge contract on Arbitrum. (6) Within 1–5 minutes, the USDC appears in your Hyperliquid account and is ready for trading.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f2" id="b2">
+        <h3>How long does a Hyperliquid withdrawal take?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f2" class="faq-content" role="region" aria-labelledby="b2">
+        <p>Standard withdrawals under $100,000 USDC typically complete within 2–10 minutes. Larger withdrawals require more validator signatures: $100k–$1M takes 10–60 minutes; withdrawals above $1M may take 1–4 hours. These delays are a deliberate security feature — the tiered system prevents a partial validator compromise from draining large amounts quickly. Your USDC balance on Hyperliquid is debited immediately when you initiate the withdrawal; the delay is only in the Arbitrum release.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f3" id="b3">
+        <h3>What is the difference between USDC and USDC.e on Arbitrum?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f3" class="faq-content" role="region" aria-labelledby="b3">
+        <p>Native USDC on Arbitrum is issued directly by Circle on the Arbitrum chain — it has the contract address starting with 0xaf88d... USDC.e is an older "bridged" version of USDC that was bridged from Ethereum mainnet before Circle launched native Arbitrum USDC. Hyperliquid Bridge only accepts native USDC. If your wallet shows USDC.e, you need to swap it for native USDC on a DEX like Uniswap (on Arbitrum) before depositing to Hyperliquid. Most major exchanges now withdraw native USDC to Arbitrum by default, so new deposits from CEXs are usually the correct format.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f4" id="b4">
+        <h3>What are the Hyperliquid Bridge fees?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f4" class="faq-content" role="region" aria-labelledby="b4">
+        <p>Deposits cost only Arbitrum gas (~$0.01–$0.10) — Hyperliquid charges no deposit fee. Withdrawals have a flat fee of approximately 1 USDC regardless of withdrawal size — making it proportionally cheap for large withdrawals (0.001% on $100k) and relatively expensive for tiny withdrawals (10% on $10). The Arbitrum gas for the withdrawal release transaction is covered within the flat withdrawal fee, so you don't need ETH on Arbitrum to receive a withdrawal. Depositing from Ethereum mainnet directly costs $5–$30 in Ethereum gas — bridge to Arbitrum first to save on fees.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f5" id="b5">
+        <h3>Can I use a third-party bridge to deposit to Hyperliquid?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f5" class="faq-content" role="region" aria-labelledby="b5">
+        <p>No — there is no legitimate third-party bridge to Hyperliquid L1. Hyperliquid L1 is a custom, non-EVM blockchain that cannot be reached by general-purpose bridges like Stargate, Hop, Across, or Wormhole. Any site claiming to offer an alternative Hyperliquid bridge is either a phishing scam or will fail at execution — likely taking your USDC without delivering it to Hyperliquid. The only supported deposit method is the official Hyperliquid bridge at app.hyperliquid.xyz.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f6" id="b6">
+        <h3>Is it safe to keep large amounts of USDC in Hyperliquid?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f6" class="faq-content" role="region" aria-labelledby="b6">
+        <p>Hyperliquid's bridge has a strong security model — tiered withdrawal limits, multi-signature validator requirements, and an audited Arbitrum bridge contract. However, Hyperliquid L1's validator set is smaller and more concentrated than mature networks, which is the primary risk factor. The platform has processed billions in volume without a bridge exploit, but its security model is less battle-tested than Ethereum or Arbitrum's core infrastructure. For most traders, keeping active trading capital on Hyperliquid is reasonable; keeping large amounts you don't need for trading should be evaluated against the validator centralisation risk.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f7" id="b7">
+        <h3>My Hyperliquid deposit is showing on Arbiscan but not on Hyperliquid — what do I do?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f7" class="faq-content" role="region" aria-labelledby="b7">
+        <p>If Arbiscan confirms your deposit transaction to the Hyperliquid bridge contract but your Hyperliquid balance hasn't updated after 15 minutes: (1) Refresh the Hyperliquid app and check your balance again — UI sometimes lags. (2) Check if the Arbitrum transaction sent to the correct bridge contract address (verifiable in Hyperliquid docs). (3) If more than 30 minutes have passed, join the official Hyperliquid Discord and post your Arbitrum transaction hash in the support channel — the team can manually verify and credit missing deposits from confirmed Arbitrum transactions.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f8" id="b8">
+        <h3>Can I deposit from Ethereum mainnet directly?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f8" class="faq-content" role="region" aria-labelledby="b8">
+        <p>Yes — Hyperliquid supports direct deposits from Ethereum mainnet, but the gas cost is significantly higher ($5–$30 vs $0.01–$0.10 on Arbitrum). For most users, bridging USDC from Ethereum to Arbitrum first using the official Arbitrum bridge (bridge.arbitrum.io) and then depositing from Arbitrum is more economical. The exception is if you have a very large deposit where the gas savings from using Arbitrum are negligible relative to the transfer amount — in that case, direct mainnet deposit saves the extra bridging step.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f9" id="b9">
+        <h3>Why does Hyperliquid use Arbitrum and not its own chain for the bridge?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f9" class="faq-content" role="region" aria-labelledby="b9">
+        <p>Arbitrum was chosen as the primary external settlement layer for three reasons: (1) Security — Arbitrum inherits Ethereum's security, giving Hyperliquid's bridge collateral the strongest available on-chain backing without the gas costs of Ethereum mainnet; (2) Cost — Arbitrum transactions cost cents, making deposits practical for any size without $10–$50 mainnet gas fees; (3) User ecosystem — a large portion of DeFi users already hold USDC on Arbitrum from other DeFi activity, making it the natural source chain for Hyperliquid users migrating from other DeFi platforms.</p>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="container" role="contentinfo" style="padding:2.5rem 0; border-top:1px solid var(--line); margin-top:2rem">
+  <p style="color:var(--dim); font-size:.93rem">© 2026 Hyperliquid Bridge Guide. Educational content with a security-first operational focus. Not financial advice.</p>
+</footer>
+
+<script>
+  document.querySelectorAll('.faq-button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+      document.querySelectorAll('.faq-button').forEach(b => {
+        b.setAttribute('aria-expanded', 'false');
+        const c = document.getElementById(b.getAttribute('aria-controls'));
+        c.classList.remove('open'); c.style.maxHeight = '0';
+      });
+      if (!isOpen) {
+        btn.setAttribute('aria-expanded', 'true');
+        const content = document.getElementById(btn.getAttribute('aria-controls'));
+        content.classList.add('open');
+        content.style.maxHeight = content.scrollHeight + 'px';
+      }
+    });
+  });
+</script>
+</body>
+</html>
